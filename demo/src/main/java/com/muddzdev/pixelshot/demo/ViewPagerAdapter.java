@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.muddzdev.pixelshot.demo.fragments.LongListFragment;
 import com.muddzdev.pixelshot.demo.fragments.SurfaceViewFragment;
 import com.muddzdev.pixelshot.demo.fragments.TextureViewFragment;
 import com.muddzdev.pixelshot.demo.fragments.ViewFragment;
@@ -14,8 +15,8 @@ import com.muddzdev.pixelshot.demo.fragments.ViewFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private String titles[] = {"View", "SurfaceView", "TextureView"};
-    private Fragment fragments[] = {new ViewFragment(), new SurfaceViewFragment(), new TextureViewFragment()};
+    private String titles[] = {"View", "SurfaceView", "TextureView", "Long List"};
+    private Fragment fragments[] = {new ViewFragment(), new SurfaceViewFragment(), new TextureViewFragment(), new LongListFragment()};
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

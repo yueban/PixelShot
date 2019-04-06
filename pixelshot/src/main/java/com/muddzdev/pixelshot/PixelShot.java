@@ -3,6 +3,8 @@ package com.muddzdev.pixelshot;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,17 +12,25 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.PixelCopy;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static android.view.View.MeasureSpec.EXACTLY;
 
 /*
  * Copyright 2018 Muddi Walid
@@ -145,6 +155,34 @@ public class PixelShot {
         }
     }
 
+
+    private Bitmap generateLongBitmap() {
+        RecyclerView recyclerView = (RecyclerView) view;
+        int itemCount = recyclerView.getAdapter().getItemCount();
+        RecyclerView.ViewHolder viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, 0);
+        recyclerView.getAdapter().onBindViewHolder(viewHolder, 0);
+
+        viewHolder.itemView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        viewHolder.itemView.layout(0, 0, viewHolder.itemView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight());
+
+        Bitmap recyclerViewBitmap = Bitmap.createBitmap(recyclerView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight() * itemCount, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(recyclerViewBitmap);
+        canvas.drawColor(Color.YELLOW); // <---- TODO REMEMBER TO FIX THIS
+
+        int viewHolderTopPadding = 0;
+        for (int i = 0; i < itemCount; i++) {
+            recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
+            viewHolder.itemView.setDrawingCacheEnabled(true);
+            viewHolder.itemView.buildDrawingCache();
+            canvas.drawBitmap(viewHolder.itemView.getDrawingCache(), 0f, viewHolderTopPadding, null);
+            viewHolderTopPadding += viewHolder.itemView.getMeasuredHeight();
+            viewHolder.itemView.setDrawingCacheEnabled(false);
+            viewHolder.itemView.destroyDrawingCache();
+        }
+        return recyclerViewBitmap;
+    }
+
+
     private Bitmap getViewBitmap() {
         Bitmap bitmap;
         if (view instanceof TextureView) {
@@ -152,6 +190,9 @@ public class PixelShot {
             Canvas canvas = new Canvas(bitmap);
             view.draw(canvas);
             canvas.setBitmap(null);
+            return bitmap;
+        } else if (view instanceof RecyclerView) {
+            bitmap = generateLongBitmap();
             return bitmap;
         } else {
             bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
