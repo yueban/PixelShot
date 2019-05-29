@@ -2,9 +2,11 @@ package com.muddzdev.pixelshot;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -156,28 +158,38 @@ public class PixelShot {
     }
 
 
-    private Bitmap generateLongBitmap() {
-        RecyclerView recyclerView = (RecyclerView) view;
+    private Bitmap generateLongBitmap(RecyclerView recyclerView) {
+
         int itemCount = recyclerView.getAdapter().getItemCount();
         RecyclerView.ViewHolder viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, 0);
         recyclerView.getAdapter().onBindViewHolder(viewHolder, 0);
 
+        //Measure the sizes of list item views to find out how big itemView should be
         viewHolder.itemView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        viewHolder.itemView.layout(0, 0, viewHolder.itemView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight());
 
-        Bitmap recyclerViewBitmap = Bitmap.createBitmap(recyclerView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight() * itemCount, Bitmap.Config.ARGB_8888);
+        // Define measured widths/heights
+        int measuredItemHeight = viewHolder.itemView.getMeasuredHeight();
+        int measuredItemWidth = viewHolder.itemView.getMeasuredWidth();
+
+        //Set width/height of list item views
+        viewHolder.itemView.layout(0, 0, measuredItemWidth, measuredItemHeight);
+
+        //Create the Bitmap and Canvas to draw on
+        Bitmap recyclerViewBitmap = Bitmap.createBitmap(recyclerView.getMeasuredWidth(), measuredItemHeight * itemCount, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(recyclerViewBitmap);
-        canvas.drawColor(Color.YELLOW); // <---- TODO REMEMBER TO FIX THIS
 
+        //Draw RecyclerView Background:
+        Drawable drawable = recyclerView.getBackground().mutate();
+        drawable.setBounds(measuredItemWidth,measuredItemHeight * itemCount,0,0);
+        drawable.draw(canvas);
+
+        //Draw all list item views
         int viewHolderTopPadding = 0;
         for (int i = 0; i < itemCount; i++) {
             recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
-            viewHolder.itemView.setDrawingCacheEnabled(true);
-            viewHolder.itemView.buildDrawingCache();
-            canvas.drawBitmap(viewHolder.itemView.getDrawingCache(), 0f, viewHolderTopPadding, null);
-            viewHolderTopPadding += viewHolder.itemView.getMeasuredHeight();
-            viewHolder.itemView.setDrawingCacheEnabled(false);
-            viewHolder.itemView.destroyDrawingCache();
+            viewHolder.itemView.draw(canvas);
+            canvas.drawBitmap(recyclerViewBitmap, 0f, viewHolderTopPadding, null);
+            viewHolderTopPadding += measuredItemHeight;
         }
         return recyclerViewBitmap;
     }
@@ -192,7 +204,7 @@ public class PixelShot {
             canvas.setBitmap(null);
             return bitmap;
         } else if (view instanceof RecyclerView) {
-            bitmap = generateLongBitmap();
+            bitmap = generateLongBitmap((RecyclerView) view);
             return bitmap;
         } else {
             bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
@@ -206,7 +218,6 @@ public class PixelShot {
 
     public interface PixelShotListener {
         void onPixelShotSuccess(String path);
-
         void onPixelShotFailed();
     }
 

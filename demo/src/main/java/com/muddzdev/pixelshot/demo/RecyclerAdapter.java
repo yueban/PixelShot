@@ -1,6 +1,5 @@
 package com.muddzdev.pixelshot.demo;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.DummyViewHolder> {
 
+
     @NonNull
     @Override
     public DummyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TextView textView = new TextView(parent.getContext());
-        textView.setTextSize(16);
-        textView.setTextColor(Color.RED);
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return new DummyViewHolder(textView);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list, parent, false);
+        return new DummyViewHolder(v);
     }
 
     @Override
@@ -34,9 +31,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.DummyV
     class DummyViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
 
-        DummyViewHolder(@NonNull TextView textView) {
-            super(textView);
-            this.textView = textView;
+        public DummyViewHolder(View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.title);
 
         }
     }

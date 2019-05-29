@@ -2,12 +2,16 @@ package com.muddzdev.pixelshot.demo;
 
 import android.Manifest;
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,4 +99,5 @@ public class MainActivity extends AppCompatActivity implements PixelShot.PixelSh
             }
         }
     }
+
 }
