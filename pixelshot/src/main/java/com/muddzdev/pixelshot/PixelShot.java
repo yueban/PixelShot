@@ -162,7 +162,6 @@ public class PixelShot {
 
         int itemCount = recyclerView.getAdapter().getItemCount();
         RecyclerView.ViewHolder viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, 0);
-        recyclerView.getAdapter().onBindViewHolder(viewHolder, 0);
 
         //Measure the sizes of list item views to find out how big itemView should be
         viewHolder.itemView.measure(View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -179,16 +178,21 @@ public class PixelShot {
         Canvas canvas = new Canvas(recyclerViewBitmap);
 
         //Draw RecyclerView Background:
-        Drawable drawable = recyclerView.getBackground().mutate();
-        drawable.setBounds(measuredItemWidth,measuredItemHeight * itemCount,0,0);
-        drawable.draw(canvas);
+        if(recyclerView.getBackground() !=null){
+            Drawable drawable = recyclerView.getBackground().mutate();
+            drawable.setBounds(measuredItemWidth,measuredItemHeight * itemCount,0,0);
+            drawable.draw(canvas);
+        }
 
         //Draw all list item views
         int viewHolderTopPadding = 0;
         for (int i = 0; i < itemCount; i++) {
+
+            //TODO Something is not right here???
+
             recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
             viewHolder.itemView.draw(canvas);
-            canvas.drawBitmap(recyclerViewBitmap, 0f, viewHolderTopPadding, null);
+            canvas.drawBitmap(recyclerViewBitmap,0f, viewHolderTopPadding, null);
             viewHolderTopPadding += measuredItemHeight;
         }
         return recyclerViewBitmap;

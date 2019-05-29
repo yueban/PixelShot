@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
-        android:background="#5E3D85"
-        android:layout_marginLeft="20dp"
+        android:background="#FF5151"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -16,18 +16,17 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_save_black_24dp" />
+            android:src="@drawable/ic_android_black_24dp" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="Hello Wolrd!!!!"
+            tools:text="Hello Wolrd!"
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
 

@@ -25,12 +25,6 @@ public class LongListFragment extends BaseFragment {
         recyclerView = v.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new RecyclerAdapter());
-
-
-
-
-
-
         return v;
     }
 
