@@ -2,8 +2,7 @@
 [![](https://img.shields.io/badge/API-19%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=19)
 [![APK](https://img.shields.io/badge/Download-Demo-brightgreen.svg)](https://github.com/Muddz/PixelShot/raw/master/demo.apk)
 
-PixelShot is an awesome Android library that can save any `View`, `SurfaceView` and full sized `RecyclerView` as an image in `JPG`,`PNG` or `.nomedia`  
-The library works on a asynchronous backgroun thread and handles errors of I/O operations and memory handling for you. 
+PixelShot is Android library that can save any `View`, `SurfaceView` and full sized `RecyclerView` as an image in `JPG`,`PNG` or `.nomedia`. The library works on a asynchronous backgroun thread and handles errors of I/O operations and memory handling for you. 
 
 Note: Taking an image of a SurfaceView is only supported from `minApi 24`
 
