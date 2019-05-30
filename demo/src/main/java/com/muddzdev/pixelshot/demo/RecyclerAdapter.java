@@ -35,8 +35,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.DummyV
         public DummyViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.title);
-
         }
     }
-
 }
