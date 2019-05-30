@@ -162,6 +162,7 @@ public class PixelShot {
     private Bitmap generateLongBitmap(RecyclerView recyclerView) {
 
         recyclerView.getAdapter().notifyDataSetChanged();
+        //TODO REMEMBER REMEMBER REMEMEBER!!!
 //        int itemCount = recyclerView.getAdapter().getItemCount();
         int itemCount = 5;
         RecyclerView.ViewHolder viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, 0);
@@ -189,12 +190,12 @@ public class PixelShot {
 
 
         //Draw all list item views
-        int viewHolderTopPadding =0;
+        int viewHolderTopPadding = 0;
         for (int i = 0; i < itemCount; i++) {
             recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
             viewHolder.itemView.draw(canvas);
             canvas.drawBitmap(bitmap, 0f, viewHolderTopPadding, null);
-            viewHolderTopPadding  += measuredItemHeight;
+            viewHolderTopPadding += measuredItemHeight;
 
         }
         return bitmap;
