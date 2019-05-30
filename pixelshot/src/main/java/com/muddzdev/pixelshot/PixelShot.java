@@ -2,11 +2,7 @@ package com.muddzdev.pixelshot;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -15,25 +11,18 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.PixelCopy;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import static android.view.View.MeasureSpec.EXACTLY;
 
 /*
  * Copyright 2018 Muddi Walid
@@ -118,6 +107,7 @@ public class PixelShot {
      */
 
     public void save() throws NullPointerException {
+
         if (!Utils.isStorageReady()) {
             throw new IllegalStateException("Storage was not ready for use");
         }
@@ -161,10 +151,7 @@ public class PixelShot {
 
     private Bitmap generateLongBitmap(RecyclerView recyclerView) {
 
-        recyclerView.getAdapter().notifyDataSetChanged();
-        //TODO REMEMBER REMEMBER REMEMEBER!!!
-//        int itemCount = recyclerView.getAdapter().getItemCount();
-        int itemCount = 5;
+        int itemCount = recyclerView.getAdapter().getItemCount();
         RecyclerView.ViewHolder viewHolder = recyclerView.getAdapter().createViewHolder(recyclerView, 0);
 
         //Measure the sizes of list item views to find out how big itemView should be
@@ -178,8 +165,9 @@ public class PixelShot {
         viewHolder.itemView.layout(0, 0, measuredItemWidth, measuredItemHeight);
 
         //Create the Bitmap and Canvas to draw on
-        Bitmap bitmap = Bitmap.createBitmap(recyclerView.getMeasuredWidth(), measuredItemHeight * itemCount, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
+        Bitmap recyclerViewBitmap = Bitmap.createBitmap(recyclerView.getMeasuredWidth(), measuredItemHeight * itemCount, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(recyclerViewBitmap);
+
 
         //Draw RecyclerView Background:
         if (recyclerView.getBackground() != null) {
@@ -188,17 +176,24 @@ public class PixelShot {
             drawable.draw(canvas);
         }
 
-
         //Draw all list item views
         int viewHolderTopPadding = 0;
         for (int i = 0; i < itemCount; i++) {
             recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
-            viewHolder.itemView.draw(canvas);
-            canvas.drawBitmap(bitmap, 0f, viewHolderTopPadding, null);
+            viewHolder.itemView.setDrawingCacheEnabled(true);
+            viewHolder.itemView.buildDrawingCache();
+            canvas.drawBitmap(viewHolder.itemView.getDrawingCache(), 0f, viewHolderTopPadding, null);
             viewHolderTopPadding += measuredItemHeight;
-
+            viewHolder.itemView.setDrawingCacheEnabled(false);
+            viewHolder.itemView.destroyDrawingCache();
+            
+//            //TODO This should work but doesn't
+//            recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
+//            viewHolder.itemView.draw(canvas);
+//            canvas.drawBitmap(recyclerViewBitmap, 0f, viewHolderTopPadding, null);
+//            viewHolderTopPadding += measuredItemHeight;
         }
-        return bitmap;
+        return recyclerViewBitmap;
     }
 
 
