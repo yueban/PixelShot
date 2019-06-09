@@ -15,14 +15,14 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /*
  * Copyright 2018 Muddi Walid
@@ -103,7 +103,8 @@ public class PixelShot {
     }
 
     /**
-     * @throws NullPointerException If View is null.
+     * @throws NullPointerException
+     *         If View is null.
      */
 
     public void save() throws NullPointerException {
@@ -125,6 +126,17 @@ public class PixelShot {
         } else {
             new BitmapSaver(getAppContext(), getViewBitmap(), path, filename, fileExtension, jpgQuality, listener).execute();
         }
+    }
+
+    public void save(int width, int widthMeasureSpecMode, int height, int heightMeasureSpecMode) throws NullPointerException {
+        // validate view.width and view.height
+        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, widthMeasureSpecMode);
+        int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, heightMeasureSpecMode);
+
+        // validate view.measurewidth and view.measureheight
+        view.measure(measuredWidth, measuredHeight);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        save();
     }
 
 
@@ -160,7 +172,6 @@ public class PixelShot {
         Bitmap recyclerViewBitmap = Bitmap.createBitmap(recyclerView.getMeasuredWidth(), measuredItemHeight * itemCount, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(recyclerViewBitmap);
 
-
         //Draw RecyclerView Background:
         if (recyclerView.getBackground() != null) {
             Drawable drawable = recyclerView.getBackground().mutate();
@@ -178,7 +189,7 @@ public class PixelShot {
             viewHolderTopPadding += measuredItemHeight;
             viewHolder.itemView.setDrawingCacheEnabled(false);
             viewHolder.itemView.destroyDrawingCache();
-            
+
 //            //TODO This should work but doesn't
 //            recyclerView.getAdapter().onBindViewHolder(viewHolder, i);
 //            viewHolder.itemView.draw(canvas);
