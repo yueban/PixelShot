@@ -107,14 +107,6 @@ public class PixelShot {
      */
 
     public void save() throws NullPointerException {
-
-        if (!Utils.isStorageReady()) {
-            throw new IllegalStateException("Storage was not ready for use");
-        }
-        if (!Utils.isPermissionGranted(getAppContext())) {
-            throw new SecurityException("Permission WRITE_EXTERNAL_STORAGE is missing");
-        }
-
         if (view instanceof SurfaceView) {
             PixelCopyHelper.getSurfaceBitmap((SurfaceView) view, new PixelCopyHelper.PixelCopyListener() {
                 @Override
