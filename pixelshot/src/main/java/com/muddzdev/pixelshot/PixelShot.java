@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -228,7 +226,7 @@ public class PixelShot {
     }
 
 
-    static class BitmapSaver extends AsyncTask<Void, Void, Void> implements MediaScannerConnection.OnScanCompletedListener {
+    static class BitmapSaver extends AsyncTask<Void, Void, Void> {
 
         private final WeakReference<Context> weakContext;
         private Handler handler = new Handler(Looper.getMainLooper());
@@ -293,25 +291,9 @@ public class PixelShot {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            MediaScannerConnection.scanFile(weakContext.get(), new String[]{file.getPath()}, null, this);
             weakContext.clear();
-        }
-
-        @Override
-        public void onScanCompleted(final String path, final Uri uri) {
             if (listener != null) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (uri != null) {
-                            Log.i(TAG, "Saved image to path: " + path);
-                            Log.i(TAG, "Saved image to URI: " + uri);
-                            listener.onPixelShotSuccess(path);
-                        } else {
-                            listener.onPixelShotFailed();
-                        }
-                    }
-                });
+                listener.onPixelShotSuccess(file.getAbsolutePath());
             }
         }
     }
