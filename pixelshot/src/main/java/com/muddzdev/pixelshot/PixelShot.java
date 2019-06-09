@@ -264,7 +264,7 @@ public class PixelShot {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            File directory = new File(Environment.getExternalStorageDirectory(), path);
+            File directory = new File(path);
             if (!directory.exists() && !directory.mkdirs()) {
                 cancelTask();
                 return null;
