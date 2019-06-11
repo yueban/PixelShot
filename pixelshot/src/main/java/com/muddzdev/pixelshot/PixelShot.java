@@ -126,18 +126,6 @@ public class PixelShot {
         }
     }
 
-    public void save(int width, int widthMeasureSpecMode, int height, int heightMeasureSpecMode) throws NullPointerException {
-        // validate view.width and view.height
-        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, widthMeasureSpecMode);
-        int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, heightMeasureSpecMode);
-
-        // validate view.measurewidth and view.measureheight
-        view.measure(measuredWidth, measuredHeight);
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-        save();
-    }
-
-
     private void setFileExtension(String fileExtension) {
         this.fileExtension = fileExtension;
     }
