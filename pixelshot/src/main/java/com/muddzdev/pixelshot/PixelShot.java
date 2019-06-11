@@ -48,6 +48,7 @@ public class PixelShot {
     private static final int JPG_MAX_QUALITY = 100;
 
     private String path = Environment.DIRECTORY_PICTURES;
+    private float scale = 1.0f;
     private String filename = String.valueOf(System.currentTimeMillis());
     private String fileExtension = EXTENSION_JPG;
     private int jpgQuality = JPG_MAX_QUALITY;
@@ -65,6 +66,11 @@ public class PixelShot {
 
     public PixelShot setFilename(String filename) {
         this.filename = filename;
+        return this;
+    }
+
+    public PixelShot setScale(float scale) {
+        this.scale = scale;
         return this;
     }
 
@@ -198,8 +204,9 @@ public class PixelShot {
             bitmap = generateLongBitmap((RecyclerView) view);
             return bitmap;
         } else {
-            bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap((int) (view.getWidth() * scale), (int) (view.getHeight() * scale), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
+            canvas.scale(scale, scale);
             view.draw(canvas);
             canvas.setBitmap(null);
             return bitmap;

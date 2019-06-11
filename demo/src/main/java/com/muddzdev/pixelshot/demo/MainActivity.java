@@ -2,23 +2,23 @@ package com.muddzdev.pixelshot.demo;
 
 import android.Manifest;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.muddzdev.pixelshot.PixelShot;
 import com.muddzdev.pixelshot.demo.fragments.BaseFragment;
+
+import java.io.File;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 
 
 public class MainActivity extends AppCompatActivity implements PixelShot.PixelShotListener {
@@ -63,7 +63,12 @@ public class MainActivity extends AppCompatActivity implements PixelShot.PixelSh
                 PixelShot.of(getTargetView()).setResultListener(this).save();
                 break;
             case R.id.menu_pgn:
-                PixelShot.of(getTargetView()).setResultListener(this).toPNG().save();
+                PixelShot.of(getTargetView())
+                        .setPath(new File(Environment.getExternalStorageDirectory() , Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                        .setScale(2f)
+                        .setResultListener(this)
+                        .toPNG()
+                        .save();
                 break;
             case R.id.menu_nomedia:
                 PixelShot.of(getTargetView()).setResultListener(this).toNomedia().save();
